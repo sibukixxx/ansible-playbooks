@@ -1,0 +1,13 @@
+---
+- hosts: all
+  vars:
+  remote_user: root
+  sudo: no
+
+# checked -> debian8.1
+
+  handlers:
+
+  tasks:
+  - name: Install elasticsearch-curator
+    pip: name=elasticsearch-curator

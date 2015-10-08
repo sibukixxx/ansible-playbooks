@@ -1,0 +1,14 @@
+---
+- hosts: all
+  vars:
+  remote_user: root
+  sudo: no
+
+# checked -> CentOS7.0
+
+  tasks:
+  - name: service stop
+    service: name={{ item }} state=stopped enabled=no
+    with_items:
+     - firewalld
+     - avahi-daemon

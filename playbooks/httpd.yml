@@ -1,0 +1,24 @@
+---
+- hosts: all
+  vars:
+  remote_user: root
+  sudo: no
+
+# checked -> CentOS7.1
+
+  handlers:
+  - name: httpd restart
+    service: name=httpd state=restarted
+
+  tasks:
+  - name: install httpd and mod_ssl packages
+    yum: name={{ item }} state=installed
+    with_items:
+     - httpd
+     - mod_ssl
+    notify: httpd restart
+
+  - name: httpd service enable
+    service: name={{ item }} state=running enabled=yes
+    with_items:
+     - httpd

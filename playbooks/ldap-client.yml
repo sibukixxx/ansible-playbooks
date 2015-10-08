@@ -1,0 +1,55 @@
+---
+- hosts: all
+  vars:
+  remote_user: root
+  sudo: no
+
+# checked -> CentOS7.0, 6.6
+
+#  handlers:
+#  - name: zabbix-agent restart
+#    service: name=zabbix-agent state=restarted
+
+  tasks:
+  - name: install remote packages
+    yum: name={{ item }} state=installed
+    with_items:
+     - openldap
+     - pam_ldap
+     - nss-pam-ldapd
+     - nscd
+     - openssh-ldap
+
+  - name: enable mkhomedir
+    shell: authconfig --enablemkhomedir --update
+
+  - name: regist ldap server
+    shell: authconfig --ldapserver="ldap://172.18.254.131/" --update
+
+  - name: enable nss-ldap auth
+    shell: authconfig --enableldap  --update
+
+  - name: enable pam-ldap auth
+    shell: authconfig --enableldapauth --update
+
+  - name: set basedn
+    shell: authconfig --ldapbasedn="dc=borders,dc=jp" --update
+
+  - name: replace sss to ldap (only CentOS6.x)
+    replace: dest={{ item }} regexp='pam_sss.so' replace='pam_ldap.so' backup=yes
+    with_items:
+     - /etc/pam.d/fingerprint-auth
+     - /etc/pam.d/fingerprint-auth-ac
+     - /etc/pam.d/password-auth
+     - /etc/pam.d/password-auth-ac
+     - /etc/pam.d/smartcard-auth
+     - /etc/pam.d/smartcard-auth-ac
+     - /etc/pam.d/system-auth
+     - /etc/pam.d/system-auth-ac
+    when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "6"
+
+  - name: service enable
+    service: name={{ item }} state=restarted enabled=yes
+    with_items:
+     - nscd
+     - nslcd

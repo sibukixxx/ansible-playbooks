@@ -1,0 +1,52 @@
+---
+- hosts: all
+  vars:
+  remote_user: root
+  sudo: no
+
+# checked -> CentOS6.4, 7.0, 7.1
+
+  handlers:
+  - name: zabbix-agent restart
+    service: name=zabbix-agent state=restarted
+
+  - name: vmtoolsd restart
+    service: name=vmtoolsd state=restarted
+
+  tasks:
+  - name: upload files
+    copy: src=/usr/local/src/upload/rpms/operation/ dest=/usr/local/src/
+
+  - name: install local packages (for CentOS6.x)
+    yum: name={{ item }} state=installed
+    with_items:
+     - /usr/local/src/zabbix-release-2.2-1.el6.noarch.rpm
+     - /usr/local/src/logstash-forwarder-0.4.0-1.x86_64.rpm
+    when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "6"
+
+  - name: install local packages (for CentOS7.x)
+    yum: name={{ item }} state=installed
+    with_items:
+     - /usr/local/src/zabbix-release-2.2-1.el7.noarch.rpm
+     - /usr/local/src/logstash-forwarder-0.4.0-1.x86_64.rpm
+    when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
+
+  - name: install remote packages
+    yum: name={{ item }} state=installed
+    with_items:
+     - zabbix-agent
+     - git
+
+  - name: install open-vm-tools (only CentOS7.x)
+    yum: name=open-vm-tools state=installed
+    when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
+    notify: vmtoolsd restart
+
+  - name: copy config files
+    copy: src=/usr/local/src/upload/configs/operation/zabbix_agentd.conf dest=/etc/zabbix/zabbix_agentd.conf
+    notify: zabbix-agent restart
+
+  - name: service enable
+    service: name={{ item }} state=running enabled=yes
+    with_items:
+     - zabbix-agent

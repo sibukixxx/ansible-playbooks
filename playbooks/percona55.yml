@@ -1,0 +1,27 @@
+---
+- hosts: all
+  vars:
+  remote_user: root
+  sudo: no
+
+# checked -> CentOS6.6
+
+  tasks:
+  - name: install repo packages
+    yum: name={{ item }} state=present
+    with_items:
+     - http://www.percona.com/redir/downloads/percona-release/percona-release-0.0-1.x86_64.rpm
+
+  - name: install percona packages
+    yum: name={{ item }} state=present
+    with_items:
+     - Percona-Server-server-55
+     - Percona-Server-client-55
+     - Percona-Server-shared-55
+     - percona-toolkit
+     - xtrabackup
+
+  - name: service enable
+    service: name={{ item }} state=started enabled=yes
+    with_items:
+     - mysql

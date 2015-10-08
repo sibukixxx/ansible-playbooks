@@ -1,0 +1,13 @@
+---
+- hosts: all
+  vars:
+  remote_user: root
+  sudo: no
+
+# checked -> CentOS 7.0
+
+  handlers:
+
+  tasks:
+  - name: yum upgrade
+    yum: name=* state=latest

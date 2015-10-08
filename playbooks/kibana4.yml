@@ -1,0 +1,19 @@
+---
+- hosts: all
+  vars:
+  remote_user: root
+  sudo: no
+
+# checked -> debian8.1
+
+  handlers:
+
+  tasks:
+  - name: Download the Kibana 4 binary package
+    get_url: url=https://download.elastic.co/kibana/kibana/kibana-4.1.1-linux-x64.tar.gz dest=/usr/local/src
+
+  - name: Unarchive Kibana 4 binary package
+    unarchive: src=/usr/local/src/kibana-4.1.1-linux-x64.tar.gz dest=/opt copy=no
+
+#  - name: Execute Kibana 4
+#    shell: nohup /opt/kibana-4.1.1-linux-x64/bin/kibana &

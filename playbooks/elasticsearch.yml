@@ -1,0 +1,28 @@
+---
+- hosts: all
+  vars:
+  remote_user: root
+  sudo: no
+
+# checked -> debian8.1
+
+  handlers:
+  - name: Configure Elasticsearch to automatically start during bootup
+    service: name=elasticsearch state=running enabled=yes
+
+  tasks:
+  - name: Download and install the Public Signing Key
+    apt_key: url=https://packages.elastic.co/GPG-KEY-elasticsearch state=present
+
+  - name: Save the repository definition
+    apt_repository: repo="deb http://packages.elastic.co/elasticsearch/1.7/debian stable main" state=present
+
+  - name: Apt-get Update
+    apt: update_cache=yes
+
+  - name: Apt-get Install openjdk
+    apt: name=openjdk-8-jre state=present
+
+  - name: Apt-get Install Elasticsearch
+    apt: name=elasticsearch state=present
+    notify: Configure Elasticsearch to automatically start during bootup

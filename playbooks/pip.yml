@@ -1,0 +1,19 @@
+---
+- hosts: all
+  vars:
+  remote_user: root
+  sudo: no
+
+# checked -> debian8.1
+
+  handlers:
+  - name: Execute get-pip.py
+    command: /usr/local/src/get-pip.py
+
+  tasks:
+  - name: Apt-get Install python
+    apt: name=python state=present
+
+  - name: Download get-pip.py
+    get_url: url=https://raw.github.com/pypa/pip/master/contrib/get-pip.py dest=/usr/local/src mode=0755
+    notify: Execute get-pip.py

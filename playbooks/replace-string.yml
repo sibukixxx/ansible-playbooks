@@ -1,0 +1,15 @@
+---
+- hosts: all
+  sudo: yes
+  vars:
+# ここは外出しする
+    arget: "/etc/php.ini"
+    regexp_str: "^auto_prepend_file.*\n"
+    replace_str: "auto_prepend_file = '/cposthome/psr/autoload.php'\n"
+
+  handlers:
+
+  tasks:
+  - name: replace specified line.
+    replace: dest="{{ target }}" regexp="{{ regexp_str }}" replace="{{ replace_str }}" backup=yes
+    register: rep_result

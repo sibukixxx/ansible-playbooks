@@ -1,0 +1,39 @@
+---
+- hosts: all
+  remote_user: root
+  sudo: no
+  vars:
+#    bind_version:
+
+# checked -> CentOS7.1
+
+  handlers:
+
+  tasks:
+  - name: Download bind tarball
+    get_url: url=ftp://ftp.isc.org/isc/bind9/{{bind_version}}/bind-{{bind_version}}.tar.gz dest=/usr/local/src mode=0755
+
+  - name: unarchive bind tarball
+    command: tar xvzf bind-{{bind_version}}.tar.gz chdir=/usr/local/src
+    register: result-unarchive
+
+  - name: configure bind
+    command: ./configure --prefix=/usr/local/bind-{{bind_version}} --sysconfdir=/etc --enable-threads --disable-openssl-version-check --disable-ipv6 --without-openssl chdir=/usr/local/src/bind-{{bind_version}}
+
+  - name: make bind
+    command: make chdir=/usr/local/src/bind-{{bind_version}}
+
+  - name: install bind
+    command: make install chdir=/usr/local/src/bind-{{bind_version}}
+
+  - name: stop bind service
+    service: name=named state=stopped
+
+  - name: rm symbolic link
+    command: rm -f /usr/local/bind
+
+  - name: make new symbolic link
+    command: ln -s /usr/local/bind-{{bind_version}} /usr/local/bind
+
+  - name: start bind service
+    service: name=named state=running

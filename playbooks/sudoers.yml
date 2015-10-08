@@ -1,0 +1,15 @@
+---
+- hosts: all
+  vars:
+  remote_user: root
+  sudo: no
+
+# checked -> CentOS6.6
+
+#  handlers:
+#  - name: zabbix-agent restart
+#    service: name=zabbix-agent state=restarted
+
+  tasks:
+  - name: Add a wheel as a sudo group.
+    lineinfile: dest=/etc/sudoers line='%wheel  ALL=(ALL) ALL' backup=yes

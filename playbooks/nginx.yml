@@ -1,0 +1,28 @@
+---
+- hosts: all
+  vars:
+  remote_user: root
+  sudo: no
+
+# checked -> CentOS7.1
+
+  handlers:
+  - name: nginx restart
+    service: name=nginx state=restarted
+
+  tasks:
+  - name: install nginx repo package
+    yum: name=http://nginx.org/packages/centos/7/noarch/RPMS/nginx-release-centos-7-0.el7.ngx.noarch.rpm state=installed
+
+  - name: install nginx and openssl packages
+    yum: name={{ item }} state=latest
+    with_items:
+     - nginx
+     - openssl
+
+  - name: httpd service enable
+    service: name={{ item }} state=running enabled=yes
+    with_items:
+     - nginx
+    notify:
+     - nginx restart

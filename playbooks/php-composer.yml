@@ -1,0 +1,13 @@
+---
+- hosts: all
+  vars:
+  remote_user: root
+  sudo: no
+
+# checked -> CentOS7.1
+
+  handlers:
+
+  tasks:
+  - name: Install composer
+    shell: curl -sS https://getcomposer.org/installer | php;mv composer.phar /usr/bin/composer
