@@ -24,7 +24,7 @@
     shell: authconfig --enablemkhomedir --update
 
   - name: regist ldap server
-    shell: authconfig --ldapserver="ldap://172.18.254.131/" --update
+    shell: authconfig --ldapserver="ldap://${ip}/" --update
 
   - name: enable nss-ldap auth
     shell: authconfig --enableldap  --update
@@ -33,7 +33,7 @@
     shell: authconfig --enableldapauth --update
 
   - name: set basedn
-    shell: authconfig --ldapbasedn="dc=borders,dc=jp" --update
+    shell: authconfig --ldapbasedn="dc=${domain},dc=${domain}" --update
 
   - name: replace sss to ldap (only CentOS6.x)
     replace: dest={{ item }} regexp='pam_sss.so' replace='pam_ldap.so' backup=yes
