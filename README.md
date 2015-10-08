@@ -1,4 +1,4 @@
-ansible-deployment
+ansible-playbooks
 ==================
 
-example ansible-deployment 
+example ansible-playbooks
