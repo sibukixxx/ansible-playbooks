@@ -1,0 +1,13 @@
+---
+  - name: "ユーザの作成"
+    user: name={user.name} uid=1001
+
+  - name: Ansible管理ホストのSSH公開鍵を登録
+    authorized_key:
+      user: {user.name}
+      key: "https://github.com/{user.name}.keys"
+  - name: ansible ユーザに sudo 権限を付与
+    lineinfile:
+      dest: /etc/sudoers
+      backup: yes
+      line: '{user.name} ALL=(ALL) NOPASSWD: ALL'

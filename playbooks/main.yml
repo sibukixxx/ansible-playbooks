@@ -1,0 +1,11 @@
+- hosts: all
+  become: yes
+  vars:
+    locale: ja_JP.UTF-8
+    language: ja
+    timezone: Asia/Tokyo
+  roles:
+    - ssh
+  tasks:
+    #- name: updates a server
+    #  apt: update_cache=yes
