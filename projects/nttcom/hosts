@@ -1,0 +1,10 @@
+localhost ansible_connection=local
+
+[webservers]
+localhost
+
+[dbservers]
+localhost
+
+[zabbix-server]
+localhost

@@ -1,0 +1,15 @@
+version: '2'
+services:
+  ec2:
+    build: .
+    # image: amazonlinux
+    command: tail -f /dev/null
+    container_name: ec2
+    volumes:
+      - ".:/ansible-playbook"
+    ports:
+      - "10080:80"  
+
+# ansible -i hosts all -m ping
+# ansible-playbook site.yml -i hosts -C // Dry run
+

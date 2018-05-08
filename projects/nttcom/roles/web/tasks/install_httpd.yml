@@ -1,0 +1,25 @@
+---
+# These tasks install http and the php modules.
+
+- name: Install httpd and php
+  yum: name={{ item }} state=present
+  with_items:
+   - httpd24
+   - php71
+   - php71-pgsql
+
+- name: Install web role specific dependencies
+  yum: name={{ item }} state=installed
+  with_items:
+   - git
+   - vim
+   - wget
+   - libselinux-python
+
+- name: http service state
+  service: name=httpd state=started enabled=yes
+
+# TODO: apache のテンプレートファイルを作成・配置
+
+- name: Configure SELinux to allow httpd to connect to remote database
+  seboolean: name=httpd_can_network_connect_db state=true persistent=yes

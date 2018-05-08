@@ -1,0 +1,12 @@
+---
+# Handler to handle Zabbix Server
+
+# https://qiita.com/mats116/items/59615a169a45884c2548
+- name: restart mysqld
+  service: name=mysqld state=restarted enabled=yes
+
+- name: restart zabbix-server
+  service: name=zabbix-server state=restarted enabled=yes
+
+- name: restart httpd
+  service: name=httpd state=restarted enabled=yes

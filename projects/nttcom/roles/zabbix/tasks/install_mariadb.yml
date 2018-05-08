@@ -1,0 +1,14 @@
+---
+# Install and setting Mariadb
+- name: Shell Exec
+  shell: echo "NETWORKING=yes" >/etc/sysconfig/network
+
+- name: Install mysql
+  yum: name={{ item }} state=latest
+  with_items:
+    - mysql
+    - mysql-server
+    - MySQL-python27
+
+- name: start mysqld and enabled
+  service: name=mysqld state=started enabled=yes

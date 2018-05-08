@@ -1,0 +1,30 @@
+---
+# This playbook contains common plays that will be run on all nodes.
+
+- name: /etc/localtimeの設定変更
+  shell: sudo ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
+
+- name: /etc/sysconfig/clockの設定変更
+  shell: cat << EOL | sudo tee /etc/sysconfig/clock
+ZONE="Asia/Tokyo"
+UTC=true
+EOL
+
+- name: Install ntp
+  yum: name=ntp state=present
+  tags: ntp
+
+- name: Install common dependencies
+  yum: name={{ item }} state=installed
+  with_items:
+   - libselinux-python
+   - libsemanage-python
+
+- name: Configure ntp file
+  template: src=ntp.conf.j2 dest=/etc/ntp.conf
+  tags: ntp
+  notify: restart ntp
+
+- name: Start the ntp service
+  service: name=ntpd state=started enabled=yes
+  tags: ntp

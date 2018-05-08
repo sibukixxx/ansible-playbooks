@@ -1,0 +1,4 @@
+---
+- include: install_httpd.yml
+- include: install_zabbix_agent.yml
+- include: copy_code.yml
