@@ -1,9 +1,27 @@
----
-# The variables file used by the playbooks in the dbservers group.
-# These don't have to be explicitly imported by vars_files: they are autopopulated.
 
-mysqlservice: mysqld
-mysql_port: 3306
-dbuser: foouser
-dbname: foodb
-upassword: abc
+---
+
+app_user: app
+app_password: iB9TpawN
+
+postgresql_enablerepo: ""
+postgresql_restarted_state: "restarted"
+
+postgresql_python_library: python27-psycopg2
+postgresql_config_path: "/var/lib/pgsql96/data"
+postgresql_data_dir: "/var/lib/pgsql96/data"
+postgresql_bin_path: "/usr/bin"
+
+postgresql_user: postgres
+postgresql_group: postgres
+
+postgresql_unix_socket_directories:
+  - /var/run/postgresql
+
+# Host based authentication (hba) entries to be added to the pg_hba.conf. This
+# variable's defaults reflect the defaults that come with a fresh installation.
+postgresql_hba_entries:
+  - { type: local, database: all, user: postgres, auth_method: peer }
+  - { type: local, database: all, user: all, auth_method: peer }
+  - { type: host, database: all, user: all, address: '127.0.0.1/32', auth_method: md5 }
+  - { type: host, database: all, user: all, address: '::1/128', auth_method: md5 }

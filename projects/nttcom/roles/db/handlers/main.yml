@@ -1,5 +1,8 @@
 ---
 # Handler to handle DB tier notifications
 
-- name: restart mariadb
-  service: name=mariadb state=restarted
+- name: start postgresql96
+  service: name=postgresql96 state=started enabled=yes
+
+- name: restart postgresql96 
+  service: name=postgresql96 state=restarted

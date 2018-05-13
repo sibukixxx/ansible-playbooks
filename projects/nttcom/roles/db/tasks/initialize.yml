@@ -1,0 +1,12 @@
+---
+
+- stat: path=/var/lib/pgsql96/data/PG_VERSION
+  register: dbcluster
+
+- name: Ensure PostgreSQL database is initialized.
+  command: "/etc/init.d/postgresql96 initdb -D {{ postgresql_data_dir }} --encoding=UTF8 --no-locale"
+  become_user: "{{ postgresql_user }}"
+  when: not dbcluster.stat.exists
+  vars:
+    ansible_ssh_pipelining: true
+

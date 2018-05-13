@@ -1,0 +1,34 @@
+package:
+  zabbix-agent:
+    installed: true
+    versions:
+    - 3.0.16
+port:
+  tcp:80:
+    listening: true
+    ip:
+    - 0.0.0.0
+service:
+  httpd:
+    enabled: true
+    running: true
+  zabbix-agent:
+    enabled: false
+    running: false
+  zabbix-server:
+    enabled: true
+    running: true
+process:
+  httpd:
+    running: true
+file:
+  /var/www/html/index.html:
+    exists: true
+    filetype: file
+    contains:
+    - ""
+  /var/www/html/index2.html:
+    exists: true
+    filetype: file
+    contains:
+    - "sample"

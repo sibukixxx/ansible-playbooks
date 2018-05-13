@@ -1,14 +1,17 @@
 ---
 # This playbook contains common plays that will be run on all nodes.
 
-- name: /etc/localtimeの設定変更
-  shell: sudo ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
+- name: docker network
+  shell: echo "NETWORKING=yes" >/etc/sysconfig/network
 
-- name: /etc/sysconfig/clockの設定変更
-  shell: cat << EOL | sudo tee /etc/sysconfig/clock
-ZONE="Asia/Tokyo"
-UTC=true
-EOL
+- name: /etc/localtimeの設定変更
+  shell: ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
+
+# - name: /etc/sysconfig/clock の設定変更
+#   shell: cat << EOL | sudo tee /etc/sysconfig/clock
+# ZONE="Asia/Tokyo"
+# UTC=true
+# EOL
 
 - name: Install ntp
   yum: name=ntp state=present
@@ -28,3 +31,6 @@ EOL
 - name: Start the ntp service
   service: name=ntpd state=started enabled=yes
   tags: ntp
+
+- name: add jp locale
+  shell: localedef -i ja_JP -c -f UTF-8 -A /usr/share/locale/locale.alias ja_JP.UTF-8
